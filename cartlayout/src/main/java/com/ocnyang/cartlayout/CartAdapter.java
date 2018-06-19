@@ -22,17 +22,17 @@ import java.util.List;
 
 public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerView.Adapter<VH> {
 
-    private List<CartItemBean> mDatas;
-    private Context mContext;
+    protected List<CartItemBean> mDatas;
+    protected Context mContext;
     private OnCheckChangeListener onCheckChangeListener;
-
-    public void setOnCheckChangeListener(OnCheckChangeListener l) {
-        onCheckChangeListener = l;
-    }
 
     public CartAdapter(Context context, List<CartItemBean> datas) {
         mContext = context;
         mDatas = datas;
+    }
+
+    public void setOnCheckChangeListener(OnCheckChangeListener l) {
+        onCheckChangeListener = l;
     }
 
     @NonNull
@@ -60,50 +60,6 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         return viewHolder;
     }
 
-    /**
-     * If you have other styles of layout, you can return through this.
-     *
-     * @return
-     */
-    protected VH getOtherViewHolder() {
-        return null;
-    }
-
-    /**
-     * Returns a ViewHolder(extent CartViewHolder) for different items.
-     *
-     * @param itemView
-     * @return
-     */
-    protected abstract VH getNormalViewHolder(View itemView);
-
-    protected abstract VH getGroupViewHolder(View itemView);
-
-    protected abstract VH getChildViewHolder(View itemView);
-
-    /**
-     * @return item's layout's id.
-     */
-    protected abstract @LayoutRes
-    int getChildItemLayout();
-
-    protected abstract @LayoutRes
-    int getGroupItemLayout();
-
-    protected abstract @LayoutRes
-    int getNormalItemLayout();
-
-
-    @Override
-    public int getItemViewType(int position) {
-        return mDatas.get(position).getItemType();
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDatas.size();
-    }
-
     @Override
     @CallSuper
     public void onBindViewHolder(@NonNull final VH holder, final int position) {
@@ -124,11 +80,15 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (onCheckChangeListener != null)
+            if (onCheckChangeListener != null) {
                 onCheckChangeListener.onCheckedChanged(mDatas, mPosition, isChecked, mItemType);
+            }
         }
     }
 
+    /**
+     * delete all checked item
+     */
     public void removeChecked() {
         int iMax = mDatas.size() - 1;
         for (int i = iMax; i >= 0; i--) {
@@ -140,10 +100,26 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         }
     }
 
+    /**
+     * make all item's status change
+     *
+     * @param isCheck
+     */
+    public void checkedAll(boolean isCheck) {
+        for (int i = 0; i < mDatas.size(); i++) {
+            mDatas.get(i).setChecked(isCheck);
+        }
+        notifyDataSetChanged();
+    }
+
     private void addItem(int addPosition, CartItemBean itemBean) {
         mDatas.add(addPosition, itemBean);
-        notifyItemInserted(addPosition);//通知演示插入动画
-        notifyItemRangeChanged(addPosition, mDatas.size() - addPosition);//通知数据与界面重新绑定
+
+        //通知演示插入动画
+        notifyItemInserted(addPosition);
+
+        //通知数据与界面重新绑定
+        notifyItemRangeChanged(addPosition, mDatas.size() - addPosition);
     }
 
     /**
@@ -165,7 +141,8 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
 
         for (int i = 0; i < mDatas.size(); i++) {
             if (mDatas.get(i).getItemType() == CartItemBean.TYPE_GROUP) {
-                addPosition = i;//得到要插入的position
+                //得到要插入的position
+                addPosition = i;
                 break;
             }
         }
@@ -221,9 +198,10 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
      */
     public void addChild(int addPosition, ChildItemBean childItemBean) {
         addItem(addPosition, childItemBean);
-        if (onCheckChangeListener != null)
+        if (onCheckChangeListener != null) {
             onCheckChangeListener.onCheckedChanged(mDatas, addPosition,
                     mDatas.get(addPosition).isChecked(), CartItemBean.TYPE_CHILD);
+        }
     }
 
     public void addChild(ChildItemBean childItemBean) {
@@ -249,4 +227,52 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         }
         return isHaveGroup;
     }
+
+    /**
+     * If you have other styles of layout, you can return through this.
+     *
+     * @return
+     */
+    protected VH getOtherViewHolder() {
+        return null;
+    }
+
+    /**
+     * Returns a ViewHolder(extent CartViewHolder) for different items.
+     *
+     * @param itemView
+     * @return
+     */
+    protected abstract VH getNormalViewHolder(View itemView);
+
+    protected abstract VH getGroupViewHolder(View itemView);
+
+    protected abstract VH getChildViewHolder(View itemView);
+
+    /**
+     * item's layout's id.
+     *
+     * @return
+     */
+    protected abstract @LayoutRes
+    int getChildItemLayout();
+
+    protected abstract @LayoutRes
+    int getGroupItemLayout();
+
+    protected abstract @LayoutRes
+    int getNormalItemLayout();
+
+
+    @Override
+    public int getItemViewType(int position) {
+        return mDatas.get(position).getItemType();
+    }
+
+    @Override
+    public int getItemCount() {
+        return mDatas.size();
+    }
+
+
 }

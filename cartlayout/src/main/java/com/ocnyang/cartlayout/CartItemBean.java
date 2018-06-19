@@ -13,9 +13,9 @@ public class CartItemBean {
     public static final int TYPE_GROUP = 1;
     public static final int TYPE_CHILD = 2;
 
-    private boolean isChecked;
+    private boolean isChecked = false;
     private int itemType;
-    protected int itemId;
+    protected long itemId;
 
     public boolean isChecked() {
         return isChecked;
@@ -25,11 +25,11 @@ public class CartItemBean {
         isChecked = checked;
     }
 
-    public int getItemId() {
+    public long getItemId() {
         return itemId;
     }
 
-    public void setItemId(int itemId) {
+    public void setItemId(long itemId) {
         this.itemId = itemId;
     }
 
