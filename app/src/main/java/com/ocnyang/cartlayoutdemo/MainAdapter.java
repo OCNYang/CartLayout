@@ -16,7 +16,7 @@ import com.ocnyang.cartlayoutdemo.viewholder.GroupViewHolder;
 
 import java.util.List;
 
-public class MainAdapter extends CartAdapter {
+public class MainAdapter extends CartAdapter<CartViewHolder> {
 
     public MainAdapter(Context context, List datas) {
         super(context, datas);
@@ -29,12 +29,12 @@ public class MainAdapter extends CartAdapter {
 
     @Override
     protected CartViewHolder getGroupViewHolder(View itemView) {
-        return new GroupViewHolder(itemView, R.id.checkbox);
+        return (CartViewHolder) new GroupViewHolder(itemView, R.id.checkbox);
     }
 
     @Override
     protected CartViewHolder getChildViewHolder(View itemView) {
-        return new ChildViewHolder(itemView, R.id.checkbox);
+        return (CartViewHolder) new ChildViewHolder(itemView, R.id.checkbox);
     }
 
     @Override
@@ -53,17 +53,12 @@ public class MainAdapter extends CartAdapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-    }
-
-    @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        if (holder instanceof ChildViewHolder){
+        if (holder instanceof ChildViewHolder) {
             ChildViewHolder childViewHolder = (ChildViewHolder) holder;
             childViewHolder.textView.setText(((GoodsBean) mDatas.get(position)).getGoods_name());
-        }else if (holder instanceof GroupViewHolder){
+        } else if (holder instanceof GroupViewHolder) {
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
             groupViewHolder.textView.setText(((ShopBean) mDatas.get(position)).getShop_name());
         }
