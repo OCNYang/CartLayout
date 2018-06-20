@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
-public abstract class CartOnCheckChangeListener implements OnCheckChangeListener ,OnItemChangeListener{
+public abstract class CartOnCheckChangeListener implements OnCheckChangeListener, OnItemChangeListener {
 
     RecyclerView recyclerView;
     CartAdapter cartAdapter;

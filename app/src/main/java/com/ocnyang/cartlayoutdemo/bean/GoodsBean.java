@@ -2,7 +2,7 @@ package com.ocnyang.cartlayoutdemo.bean;
 
 import com.ocnyang.cartlayout.ChildItemBean;
 
-public class GoodsBean extends ChildItemBean{
+public class GoodsBean extends ChildItemBean {
     private String goods_name;
 
     public String getGoods_name() {

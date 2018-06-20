@@ -13,8 +13,9 @@ public class ParseHelper {
      */
     public static GroupItemBean getGroupBean(List<CartItemBean> beans, long itemId) {
         for (CartItemBean bean : beans) {
-            if (bean.getItemType() == CartItemBean.TYPE_GROUP && bean.getItemId() == itemId){
-                return (GroupItemBean) bean;}
+            if (bean.getItemType() == CartItemBean.TYPE_GROUP && bean.getItemId() == itemId) {
+                return (GroupItemBean) bean;
+            }
         }
         return null;
     }
@@ -42,15 +43,16 @@ public class ParseHelper {
     /**
      * 根据 itemId 获取 child 所在的 group 的 position
      *
-     * @param beans   整个数据 list
+     * @param beans  整个数据 list
      * @param itemId child 的 itemId
      * @return group 的 position
      */
     public static int getGroupPosition(List<CartItemBean> beans, long itemId) {
         for (int i = 0; i < beans.size(); i++) {
             if (beans.get(i).getItemType() == CartItemBean.TYPE_GROUP
-                    && beans.get(i).getItemId() == itemId){
-                return i;}
+                    && beans.get(i).getItemId() == itemId) {
+                return i;
+            }
         }
         return 0;
     }
