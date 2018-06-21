@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">CartLayoutDemo</string>
+
+    <string name="rmb_X">¥&#160;%1$.2f</string>
+    <string name="cart">购物车(%1$d)</string>
+    <string name="all_select">全选</string>
+    <string name="done">完成</string>
+    <string name="go_settle_X">去结算(%1$d)</string>
+    <string name="go_settle">去结算</string>
+    <string name="delete_X">删除(%1$d)</string>
+    <string name="total_">合计：</string>
+    <string name="edit">编辑</string>
 </resources>

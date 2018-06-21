@@ -2,13 +2,10 @@ package com.ocnyang.cartlayoutdemo;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.ocnyang.cartlayout.CartAdapter;
-import com.ocnyang.cartlayout.CartItemBean;
-import com.ocnyang.cartlayout.CartViewHolder;
-import com.ocnyang.cartlayout.GroupItemBean;
+import com.ocnyang.cartlayout.viewholder.CartViewHolder;
 import com.ocnyang.cartlayoutdemo.bean.GoodsBean;
 import com.ocnyang.cartlayoutdemo.bean.ShopBean;
 import com.ocnyang.cartlayoutdemo.viewholder.ChildViewHolder;

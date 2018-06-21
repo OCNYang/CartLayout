@@ -1,6 +1,5 @@
 package com.ocnyang.cartlayoutdemo.bean;
-
-import com.ocnyang.cartlayout.ChildItemBean;
+import com.ocnyang.cartlayout.bean.ChildItemBean;
 
 public class GoodsBean extends ChildItemBean {
     private String goods_name;

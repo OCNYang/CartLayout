@@ -11,6 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import com.ocnyang.cartlayout.bean.ICartItem;
+import com.ocnyang.cartlayout.bean.IChildItem;
+import com.ocnyang.cartlayout.bean.IGroupItem;
+import com.ocnyang.cartlayout.listener.OnCheckChangeListener;
+import com.ocnyang.cartlayout.viewholder.CartViewHolder;
+
 import java.util.List;
 
 /*******************************************************************
@@ -22,11 +28,11 @@ import java.util.List;
 
 public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerView.Adapter<VH> {
 
-    protected List<CartItemBean> mDatas;
+    protected List<ICartItem> mDatas;
     protected Context mContext;
     private OnCheckChangeListener onCheckChangeListener;
 
-    public CartAdapter(Context context, List<CartItemBean> datas) {
+    public CartAdapter(Context context, List<ICartItem> datas) {
         mContext = context;
         mDatas = datas;
     }
@@ -41,15 +47,15 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         VH viewHolder = null;
         switch (viewType) {
-            case CartItemBean.TYPE_NORMAL:
+            case ICartItem.TYPE_NORMAL:
                 View normalView = layoutInflater.inflate(getNormalItemLayout(), parent, false);
                 viewHolder = getNormalViewHolder(normalView);
                 break;
-            case CartItemBean.TYPE_GROUP:
+            case ICartItem.TYPE_GROUP:
                 View groupView = layoutInflater.inflate(getGroupItemLayout(), parent, false);
                 viewHolder = getGroupViewHolder(groupView);
                 break;
-            case CartItemBean.TYPE_CHILD:
+            case ICartItem.TYPE_CHILD:
                 View childView = layoutInflater.inflate(getChildItemLayout(), parent, false);
                 viewHolder = getChildViewHolder(childView);
                 break;
@@ -112,7 +118,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         notifyDataSetChanged();
     }
 
-    private void addItem(int addPosition, CartItemBean itemBean) {
+    private void addItem(int addPosition, ICartItem itemBean) {
         mDatas.add(addPosition, itemBean);
 
         //通知演示插入动画
@@ -128,19 +134,19 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
      * @param addPosition
      * @param itemBean
      */
-    public void addNormal(int addPosition, CartItemBean itemBean) {
+    public void addNormal(int addPosition, ICartItem itemBean) {
         addItem(addPosition, itemBean);
     }
 
-    public void addNormal(CartItemBean itemBean) {
-        if (itemBean.getItemType() != CartItemBean.TYPE_NORMAL) {
+    public void addNormal(ICartItem itemBean) {
+        if (itemBean.getItemType() != ICartItem.TYPE_NORMAL) {
             throw new IllegalArgumentException("The field itemType of the incoming parameter is not a TYPE_NORMAL");
         }
 
         int addPosition = -1;
 
         for (int i = 0; i < mDatas.size(); i++) {
-            if (mDatas.get(i).getItemType() == CartItemBean.TYPE_GROUP) {
+            if (mDatas.get(i).getItemType() == ICartItem.TYPE_GROUP) {
                 //得到要插入的position
                 addPosition = i;
                 break;
@@ -158,11 +164,11 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
      * @param addPosition
      * @param groupItemBean
      */
-    public void addGroup(int addPosition, GroupItemBean groupItemBean) {
+    public void addGroup(int addPosition, IGroupItem<IChildItem> groupItemBean) {
         addGroup(addPosition, groupItemBean, false);
     }
 
-    public void addGroup(int addPosition, GroupItemBean groupItemBean, boolean isStrict) {
+    public void addGroup(int addPosition, IGroupItem<IChildItem> groupItemBean, boolean isStrict) {
         if (isStrict) {
             if (groupItemBean.getChilds() == null || groupItemBean.getChilds().size() == 0) {
                 Log.e("CartAdapter", "This GroupItem have no one ChildItem");
@@ -182,11 +188,11 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         }
     }
 
-    public void addGroup(GroupItemBean groupItemBean) {
+    public void addGroup(IGroupItem<IChildItem> groupItemBean) {
         addGroup(groupItemBean, false);
     }
 
-    public void addGroup(GroupItemBean groupItemBean, boolean isStrict) {
+    public void addGroup(IGroupItem<IChildItem> groupItemBean, boolean isStrict) {
         addGroup(mDatas.size(), groupItemBean, isStrict);
     }
 
@@ -196,20 +202,19 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
      * @param addPosition
      * @param childItemBean
      */
-    public void addChild(int addPosition, ChildItemBean childItemBean) {
+    public void addChild(int addPosition, IChildItem childItemBean) {
         addItem(addPosition, childItemBean);
         if (onCheckChangeListener != null) {
             onCheckChangeListener.onCheckedChanged(mDatas, addPosition,
-                    mDatas.get(addPosition).isChecked(), CartItemBean.TYPE_CHILD);
+                    mDatas.get(addPosition).isChecked(), ICartItem.TYPE_CHILD);
         }
     }
 
-    public void addChild(ChildItemBean childItemBean) {
-        if (!isHaveGroup() || mDatas.get(mDatas.size() - 1).getItemType() == CartItemBean.TYPE_NORMAL) {
+    public void addChild(IChildItem childItemBean) {
+        if (!isHaveGroup() || mDatas.get(mDatas.size() - 1).getItemType() == ICartItem.TYPE_NORMAL) {
             Log.e("CartAdapter", "addChild is fail,have no group");
             return;
         }
-
         addChild(mDatas.size(), childItemBean);
     }
 
@@ -220,7 +225,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         boolean isHaveGroup = false;
 
         for (int i = 0; i < mDatas.size(); i++) {
-            if (mDatas.get(i).getItemType() == CartItemBean.TYPE_GROUP) {
+            if (mDatas.get(i).getItemType() == ICartItem.TYPE_GROUP) {
                 isHaveGroup = true;
                 break;
             }

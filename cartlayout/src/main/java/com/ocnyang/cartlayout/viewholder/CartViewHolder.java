@@ -1,4 +1,4 @@
-package com.ocnyang.cartlayout;
+package com.ocnyang.cartlayout.viewholder;
 
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;

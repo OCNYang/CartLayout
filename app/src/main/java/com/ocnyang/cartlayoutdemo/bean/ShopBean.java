@@ -1,6 +1,7 @@
 package com.ocnyang.cartlayoutdemo.bean;
 
-import com.ocnyang.cartlayout.GroupItemBean;
+
+import com.ocnyang.cartlayout.bean.GroupItemBean;
 
 public class ShopBean extends GroupItemBean {
     String shop_name;
