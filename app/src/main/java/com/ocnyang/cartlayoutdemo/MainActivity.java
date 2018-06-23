@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +23,7 @@ import com.ocnyang.cartlayoutdemo.bean.ShopBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView recyclerView;
     private TextView mTvTitle;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBtnSubmit = ((Button) findViewById(R.id.btn_go_to_pay));
 
         mTvEdit.setOnClickListener(this);
-        mCheckBoxAll.setOnCheckedChangeListener(this);
+        mCheckBoxAll.setOnClickListener(this);
         mBtnSubmit.setOnClickListener(this);
 
         mTvTitle.setText(getString(R.string.cart, 0));
@@ -84,21 +83,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onContextItemSelected(MenuItem item) {
         //获取到的是listView里的条目信息
         RecyclerViewWithContextMenu.RecyclerViewContextInfo info = (RecyclerViewWithContextMenu.RecyclerViewContextInfo) item.getMenuInfo();
-        Log.d("ContentMenu","onCreateContextMenu position = " + (info != null? info.getPosition() : "-1"));
-        if(info != null && info.getPosition() != -1) {
+        Log.d("ContentMenu", "onCreateContextMenu position = " + (info != null ? info.getPosition() : "-1"));
+        if (info != null && info.getPosition() != -1) {
             switch (item.getItemId()) {
                 case R.id.action_remove:
                     mAdapter.removeChild(info.getPosition());
                     Toast.makeText(this, "成功移入收藏", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.action_findmore:
-                    Toast.makeText(this, "查找与"+ ((GoodsBean) mAdapter.getData().get(info.getPosition())).getGoods_name()+"相似的产品", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "查找与" + ((GoodsBean) mAdapter.getData().get(info.getPosition())).getGoods_name() + "相似的产品", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.action_delete:
                     mAdapter.removeChild(info.getPosition());
                     break;
                 default:
                     //do nothing
+                    break;
             }
         }
         return super.onContextItemSelected(item);
@@ -114,14 +114,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         totalCheckedCount = 0;
         totalCount = 0;
         totalPrice = 0.00;
+        int notChildTotalCount = 0;
         if (mAdapter.getData() != null) {
             for (ICartItem iCartItem : mAdapter.getData()) {
                 if (iCartItem.getItemType() == ICartItem.TYPE_CHILD) {
                     totalCount++;
                     if (iCartItem.isChecked()) {
                         totalCheckedCount++;
-                        totalPrice += ((GoodsBean) iCartItem).getGoods_price()*((GoodsBean) iCartItem).getGoods_amount();
+                        totalPrice += ((GoodsBean) iCartItem).getGoods_price() * ((GoodsBean) iCartItem).getGoods_amount();
                     }
+                } else {
+                    notChildTotalCount++;
                 }
             }
         }
@@ -129,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTvTitle.setText(getString(R.string.cart, totalCount));
         mBtnSubmit.setText(getString(isEditing ? R.string.delete_X : R.string.go_settle_X, totalCheckedCount));
         mTvTotal.setText(getString(R.string.rmb_X, totalPrice));
+        if (mCheckBoxAll.isChecked() && (totalCheckedCount == 0 || (totalCheckedCount + notChildTotalCount) != mAdapter.getData().size())) {
+            mCheckBoxAll.setChecked(false);
+        }
+        if (totalCheckedCount != 0 && (!mCheckBoxAll.isChecked()) && (totalCheckedCount + notChildTotalCount) == mAdapter.getData().size()) {
+            mCheckBoxAll.setChecked(true);
+        }
     }
 
     private List<CartItemBean> getData() {
@@ -185,11 +194,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //编辑按钮事件
             case R.id.tv_edit:
                 isEditing = !isEditing;
+                mTvEdit.setText(getString(isEditing ? R.string.edit_done : R.string.edit));
                 mBtnSubmit.setText(getString(isEditing ? R.string.delete_X : R.string.go_settle_X, totalCheckedCount));
                 break;
             //提交订单 & 删除选中（编辑状态）
             case R.id.btn_go_to_pay:
                 submitEvent();
+                break;
+            case R.id.checkbox_all:
+                mAdapter.checkedAll(((CheckBox) v).isChecked());
                 break;
             default:
                 break;
@@ -198,9 +211,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void submitEvent() {
         if (isEditing) {
-            mAdapter.removeChecked();
+            if (totalCheckedCount == 0) {
+                Toast.makeText(this, "请勾选你要删除的商品", Toast.LENGTH_SHORT).show();
+            } else {
+                mAdapter.removeChecked();
+            }
+
         } else {
-            if (totalCount == 0) {
+            if (totalCheckedCount == 0) {
                 Toast.makeText(this, "你还没有选择任何商品", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this,
@@ -209,16 +227,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    /**
-     * 全选按钮的状态监听
-     *
-     * @param buttonView
-     * @param isChecked
-     */
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mAdapter.checkedAll(isChecked);
     }
 }

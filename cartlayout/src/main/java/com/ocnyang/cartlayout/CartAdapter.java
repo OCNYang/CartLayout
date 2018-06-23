@@ -180,12 +180,19 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
      * @param isCheck
      */
     public void checkedAll(boolean isCheck) {
+        //是否有条目状态被改变的标志。如果没有就不再执行刷新和条目统计。
+        boolean noOneChange = true;
         for (int i = 0; i < mDatas.size(); i++) {
-            mDatas.get(i).setChecked(isCheck);
+            if (mDatas.get(i).isChecked() != isCheck) {
+                mDatas.get(i).setChecked(isCheck);
+                noOneChange = false;
+            }
         }
-        notifyDataSetChanged();
-        if (onCheckChangeListener != null) {
-            onCheckChangeListener.onCalculateChanged(null);
+        if (!noOneChange) {
+            notifyDataSetChanged();
+            if (onCheckChangeListener != null) {
+                onCheckChangeListener.onCalculateChanged(null);
+            }
         }
     }
 

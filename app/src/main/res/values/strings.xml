@@ -4,7 +4,7 @@
     <string name="rmb_X">¥&#160;%1$.2f</string>
     <string name="cart">购物车(%1$d)</string>
     <string name="all_select">全选</string>
-    <string name="done">完成</string>
+    <string name="edit_done">取消编辑</string>
     <string name="go_settle_X">去结算(%1$d)</string>
     <string name="go_settle">去结算</string>
     <string name="delete_X">删除(%1$d)</string>

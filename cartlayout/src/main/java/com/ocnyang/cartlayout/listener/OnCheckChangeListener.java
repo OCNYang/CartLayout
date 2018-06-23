@@ -29,7 +29,7 @@ public interface OnCheckChangeListener {
      * 3. 当删除一个 item 时、或删除选中的所有 item、或删除所有 item；
      * 4. 当添加一个 item 时、同上；
      * 5. 当 setNewData(), addData(),时。
-     * @param cartItemBean 参数没有太大意义，因为有时为空
+     * @param cartItemBean 参数没有
      */
     void onCalculateChanged(ICartItem cartItemBean);
 }
