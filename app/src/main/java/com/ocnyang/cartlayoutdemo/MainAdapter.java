@@ -7,9 +7,11 @@ import android.view.View;
 import com.ocnyang.cartlayout.CartAdapter;
 import com.ocnyang.cartlayout.viewholder.CartViewHolder;
 import com.ocnyang.cartlayoutdemo.bean.GoodsBean;
+import com.ocnyang.cartlayoutdemo.bean.NormalBean;
 import com.ocnyang.cartlayoutdemo.bean.ShopBean;
 import com.ocnyang.cartlayoutdemo.viewholder.ChildViewHolder;
 import com.ocnyang.cartlayoutdemo.viewholder.GroupViewHolder;
+import com.ocnyang.cartlayoutdemo.viewholder.NormalViewHolder;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class MainAdapter extends CartAdapter<CartViewHolder> {
 
     @Override
     protected CartViewHolder getNormalViewHolder(View itemView) {
-        return null;
+        return new NormalViewHolder(itemView, -1);
     }
 
     @Override
@@ -31,10 +33,10 @@ public class MainAdapter extends CartAdapter<CartViewHolder> {
 
     @Override
     protected CartViewHolder getChildViewHolder(View itemView) {
-        return (CartViewHolder) (new ChildViewHolder(itemView, R.id.checkbox){
+        return (CartViewHolder) (new ChildViewHolder(itemView, R.id.checkbox) {
             @Override
             public void onNeedCalculate() {
-                if (onCheckChangeListener!=null){
+                if (onCheckChangeListener != null) {
                     onCheckChangeListener.onCalculateChanged(null);
                 }
             }
@@ -43,21 +45,21 @@ public class MainAdapter extends CartAdapter<CartViewHolder> {
 
     @Override
     protected int getChildItemLayout() {
-        return R.layout.acitvity_main_item_child;
+        return R.layout.activity_main_item_child;
     }
 
     @Override
     protected int getGroupItemLayout() {
-        return R.layout.acitvity_main_item_group;
+        return R.layout.activity_main_item_group;
     }
 
     @Override
     protected int getNormalItemLayout() {
-        return 0;
+        return R.layout.activity_main_item_normal;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CartViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
         if (holder instanceof ChildViewHolder) {
             ChildViewHolder childViewHolder = (ChildViewHolder) holder;
@@ -68,6 +70,18 @@ public class MainAdapter extends CartAdapter<CartViewHolder> {
         } else if (holder instanceof GroupViewHolder) {
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
             groupViewHolder.textView.setText(((ShopBean) mDatas.get(position)).getShop_name());
+        } else if (holder instanceof NormalViewHolder) {
+            NormalViewHolder normalViewHolder = (NormalViewHolder) holder;
+            normalViewHolder.imgViewClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDatas.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, mDatas.size());
+                }
+            });
+            normalViewHolder.textView.setText(mContext.getString(R.string.normal_tip_X,
+                    ((NormalBean) mDatas.get(position)).getMarkdownNumber()));
         }
     }
 }

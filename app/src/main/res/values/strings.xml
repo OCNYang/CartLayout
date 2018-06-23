@@ -10,4 +10,5 @@
     <string name="delete_X">删除(%1$d)</string>
     <string name="total_">合计：</string>
     <string name="edit">编辑</string>
+    <string name="normal_tip_X">购物车中有 %1$d 件商品已经降价，快去看看</string>
 </resources>

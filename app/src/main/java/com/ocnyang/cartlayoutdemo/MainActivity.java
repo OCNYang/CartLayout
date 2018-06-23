@@ -18,6 +18,7 @@ import com.ocnyang.cartlayout.bean.CartItemBean;
 import com.ocnyang.cartlayout.bean.ICartItem;
 import com.ocnyang.cartlayout.listener.CartOnCheckChangeListener;
 import com.ocnyang.cartlayoutdemo.bean.GoodsBean;
+import com.ocnyang.cartlayoutdemo.bean.NormalBean;
 import com.ocnyang.cartlayoutdemo.bean.ShopBean;
 
 import java.util.ArrayList;
@@ -206,6 +207,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private List<CartItemBean> getData() {
         ArrayList<CartItemBean> cartItemBeans = new ArrayList<>();
+
+        NormalBean normalBean = new NormalBean();
+        normalBean.setMarkdownNumber(6);
+        cartItemBeans.add(normalBean);
+
         for (int i = 0; i < 10; i++) {
             ShopBean shopBean = new ShopBean();
             shopBean.setShop_name("解忧杂货铺 第" + (i + 1) + "分店");
