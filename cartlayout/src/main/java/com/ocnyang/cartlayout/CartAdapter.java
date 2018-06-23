@@ -74,8 +74,6 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
     public void onBindViewHolder(@NonNull final VH holder, final int position) {
         holder.bindData(mDatas.get(position));
         if (holder.mCheckBox != null) {
-//            holder.mCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(position,
-//                    mDatas.get(position).getItemType()));
             holder.mCheckBox.setOnClickListener(new OnCheckBoxClickListener(position,
                     mDatas.get(position).getItemType()));
             if (holder.mCheckBox.isChecked() != mDatas.get(position).isChecked()) {
@@ -100,22 +98,6 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
             }
         }
     }
-
-//    private class OnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
-//        int mPosition, mItemType;
-//
-//        public OnCheckedChangeListener(int position, int itemType) {
-//            mPosition = position;
-//            mItemType = itemType;
-//        }
-//
-//        @Override
-//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//            if (onCheckChangeListener != null) {
-//                onCheckChangeListener.onCheckedChanged(mDatas, mPosition, isChecked, mItemType);
-//            }
-//        }
-//    }
 
     /**
      * delete all checked item
@@ -193,6 +175,18 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
             if (onCheckChangeListener != null) {
                 onCheckChangeListener.onCalculateChanged(null);
             }
+        }
+    }
+
+    public void setNewData(List<ICartItem> datas) {
+        mDatas.clear();
+        addData(datas);
+    }
+
+    public void addData(List<ICartItem> datas){
+        mDatas.addAll(datas);
+        if (onCheckChangeListener != null) {
+            onCheckChangeListener.onCalculateChanged(null);
         }
     }
 
@@ -365,11 +359,12 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         return mDatas.size();
     }
 
+    /**
+     * 获取 Adapter 的真实数据
+     * @return
+     */
     public List<ICartItem> getData() {
         return mDatas;
     }
 
-    public void setNewData(List<ICartItem> datas) {
-        mDatas = datas;
-    }
 }
