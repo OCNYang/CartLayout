@@ -1,4 +1,4 @@
-# CartLayout
+# CartLayout(严格说应该叫 CartAdapter 的，现在将错就错吧 :grinning:)
 
 [![GitHub issues](https://img.shields.io/github/issues/OCNYang/CartLayout.svg)](https://github.com/OCNYang/CartLayout/issues)&ensp;&ensp;
 [![GitHub forks](https://img.shields.io/github/forks/OCNYang/CartLayout.svg)](https://github.com/OCNYang/CartLayout/network)&ensp;&ensp;
