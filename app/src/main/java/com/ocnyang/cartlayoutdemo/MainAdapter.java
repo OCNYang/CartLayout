@@ -31,7 +31,14 @@ public class MainAdapter extends CartAdapter<CartViewHolder> {
 
     @Override
     protected CartViewHolder getChildViewHolder(View itemView) {
-        return (CartViewHolder) new ChildViewHolder(itemView, R.id.checkbox);
+        return (CartViewHolder) (new ChildViewHolder(itemView, R.id.checkbox){
+            @Override
+            public void onNeedCalculate() {
+                if (onCheckChangeListener!=null){
+                    onCheckChangeListener.onCalculateChanged(null);
+                }
+            }
+        });
     }
 
     @Override
@@ -55,10 +62,12 @@ public class MainAdapter extends CartAdapter<CartViewHolder> {
         if (holder instanceof ChildViewHolder) {
             ChildViewHolder childViewHolder = (ChildViewHolder) holder;
             childViewHolder.textView.setText(((GoodsBean) mDatas.get(position)).getGoods_name());
+            childViewHolder.textViewPrice.setText(
+                    mContext.getString(R.string.rmb_X, ((GoodsBean) mDatas.get(position)).getGoods_price()));
+            childViewHolder.textViewNum.setText(String.valueOf(((GoodsBean) mDatas.get(position)).getGoods_amount()));
         } else if (holder instanceof GroupViewHolder) {
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
             groupViewHolder.textView.setText(((ShopBean) mDatas.get(position)).getShop_name());
         }
-
     }
 }

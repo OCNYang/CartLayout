@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.widget.CheckBox;
 
 import com.ocnyang.cartlayout.bean.ICartItem;
 import com.ocnyang.cartlayout.bean.IChildItem;
@@ -30,7 +30,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
 
     protected List<ICartItem> mDatas;
     protected Context mContext;
-    private OnCheckChangeListener onCheckChangeListener;
+    protected OnCheckChangeListener onCheckChangeListener;
 
     public CartAdapter(Context context, List<ICartItem> datas) {
         mContext = context;
@@ -39,6 +39,9 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
 
     public void setOnCheckChangeListener(OnCheckChangeListener l) {
         onCheckChangeListener = l;
+        if (onCheckChangeListener != null) {
+            onCheckChangeListener.onCalculateChanged(null);
+        }
     }
 
     @NonNull
@@ -69,28 +72,50 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
     @Override
     @CallSuper
     public void onBindViewHolder(@NonNull final VH holder, final int position) {
+        holder.bindData(mDatas.get(position));
         if (holder.mCheckBox != null) {
-            holder.mCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(position,
+//            holder.mCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(position,
+//                    mDatas.get(position).getItemType()));
+            holder.mCheckBox.setOnClickListener(new OnCheckBoxClickListener(position,
                     mDatas.get(position).getItemType()));
-            holder.mCheckBox.setChecked(mDatas.get(position).isChecked());
+            if (holder.mCheckBox.isChecked() != mDatas.get(position).isChecked()) {
+                holder.mCheckBox.setChecked(mDatas.get(position).isChecked());
+            }
         }
     }
 
-    private class OnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
+    private class OnCheckBoxClickListener implements View.OnClickListener {
         int mPosition, mItemType;
 
-        public OnCheckedChangeListener(int position, int itemType) {
+        public OnCheckBoxClickListener(int position, int itemType) {
             mPosition = position;
             mItemType = itemType;
         }
 
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        public void onClick(View v) {
             if (onCheckChangeListener != null) {
-                onCheckChangeListener.onCheckedChanged(mDatas, mPosition, isChecked, mItemType);
+                onCheckChangeListener.onCheckedChanged(mDatas, mPosition, ((CheckBox) v).isChecked(), mItemType);
+                onCheckChangeListener.onCalculateChanged(mDatas.get(mPosition));
             }
         }
     }
+
+//    private class OnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
+//        int mPosition, mItemType;
+//
+//        public OnCheckedChangeListener(int position, int itemType) {
+//            mPosition = position;
+//            mItemType = itemType;
+//        }
+//
+//        @Override
+//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//            if (onCheckChangeListener != null) {
+//                onCheckChangeListener.onCheckedChanged(mDatas, mPosition, isChecked, mItemType);
+//            }
+//        }
+//    }
 
     /**
      * delete all checked item
@@ -102,6 +127,49 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
                 mDatas.remove(i);
                 notifyItemRemoved(i);
                 notifyItemRangeChanged(i, mDatas.size());
+            }
+        }
+        if (onCheckChangeListener != null) {
+            onCheckChangeListener.onCalculateChanged(null);
+        }
+    }
+
+    /**
+     * 移除其中一条 childItem
+     *
+     * @param position
+     */
+    public void removeChild(int position) {
+        boolean isLastOne = false;
+        if (ICartItem.TYPE_GROUP == mDatas.get(position - 1).getItemType() && ICartItem.TYPE_GROUP == mDatas.get(position + 1).getItemType()) {
+            isLastOne = true;
+        }
+        if (mDatas.get(position).isChecked()) {
+            mDatas.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, mDatas.size());
+            if (isLastOne) {
+                mDatas.remove(position - 1);
+                notifyItemRemoved(position - 1);
+                notifyItemRangeChanged(position - 1, mDatas.size());
+            }
+            if (onCheckChangeListener != null) {
+                onCheckChangeListener.onCalculateChanged(null);
+            }
+        } else {
+            if (!isLastOne) {
+                //当删除一条未被勾选的条目时，去让组条目做出相应的变化
+                if (onCheckChangeListener != null) {
+                    onCheckChangeListener.onCheckedChanged(mDatas, position, true, mDatas.get(position).getItemType());
+                }
+            }
+            mDatas.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, mDatas.size());
+            if (isLastOne) {
+                mDatas.remove(position - 1);
+                notifyItemRemoved(position - 1);
+                notifyItemRangeChanged(position - 1, mDatas.size());
             }
         }
     }
@@ -116,6 +184,9 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
             mDatas.get(i).setChecked(isCheck);
         }
         notifyDataSetChanged();
+        if (onCheckChangeListener != null) {
+            onCheckChangeListener.onCalculateChanged(null);
+        }
     }
 
     private void addItem(int addPosition, ICartItem itemBean) {
@@ -136,6 +207,9 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
      */
     public void addNormal(int addPosition, ICartItem itemBean) {
         addItem(addPosition, itemBean);
+        if (onCheckChangeListener != null) {
+            onCheckChangeListener.onCalculateChanged(itemBean);
+        }
     }
 
     public void addNormal(ICartItem itemBean) {
@@ -168,7 +242,8 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         addGroup(addPosition, groupItemBean, false);
     }
 
-    public void addGroup(int addPosition, IGroupItem<IChildItem> groupItemBean, boolean isStrict) {
+    public void addGroup(int addPosition, IGroupItem<IChildItem> groupItemBean,
+                         boolean isStrict) {
         if (isStrict) {
             if (groupItemBean.getChilds() == null || groupItemBean.getChilds().size() == 0) {
                 Log.e("CartAdapter", "This GroupItem have no one ChildItem");
@@ -185,6 +260,9 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
                     addItem(addPosition + i + 1, groupItemBean.getChilds().get(i));
                 }
             }
+        }
+        if (onCheckChangeListener != null) {
+            onCheckChangeListener.onCalculateChanged(null);
         }
     }
 
@@ -207,6 +285,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         if (onCheckChangeListener != null) {
             onCheckChangeListener.onCheckedChanged(mDatas, addPosition,
                     mDatas.get(addPosition).isChecked(), ICartItem.TYPE_CHILD);
+            onCheckChangeListener.onCalculateChanged(null);
         }
     }
 
@@ -279,5 +358,11 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         return mDatas.size();
     }
 
+    public List<ICartItem> getData() {
+        return mDatas;
+    }
 
+    public void setNewData(List<ICartItem> datas) {
+        mDatas = datas;
+    }
 }

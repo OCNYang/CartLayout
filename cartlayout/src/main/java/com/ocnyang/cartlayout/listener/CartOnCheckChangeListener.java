@@ -167,6 +167,4 @@ public abstract class CartOnCheckChangeListener implements OnCheckChangeListener
     private void setGroupCheck(List<ICartItem> beans, int groupPosition, boolean isChecked) {
         beans.get(groupPosition).setChecked(isChecked);
     }
-
-    public abstract void onChildCheckChanged(ICartItem cartItemBean, boolean isChecked);
 }

@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ocnyang.cartlayout.bean.CartItemBean;
 import com.ocnyang.cartlayout.bean.ChildItemBean;
@@ -31,6 +35,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     MainAdapter mAdapter;
 
+    private boolean isEditing;//是否处于编辑状态
+    private int totalCount;//购物车商品ChildItem的总数量，店铺条目不计算在内
+    private int totalCheckedCount;//勾选的商品总数量，店铺条目不计算在内
+    private double totalPrice;//勾选的商品总价格
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,18 +56,79 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCheckBoxAll.setOnCheckedChangeListener(this);
         mBtnSubmit.setOnClickListener(this);
 
-        mTvTitle.setText(getString(R.string.cart,0));
-        mBtnSubmit.setText(getString(R.string.go_settle_X,0));
+        mTvTitle.setText(getString(R.string.cart, 0));
+        mBtnSubmit.setText(getString(R.string.go_settle_X, 0));
+        mTvTotal.setText(getString(R.string.rmb_X, 0.00));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new MainAdapter(this, getData());
         mAdapter.setOnCheckChangeListener(new CartOnCheckChangeListener(recyclerView, mAdapter) {
             @Override
-            public void onChildCheckChanged(ICartItem cartItemBean, boolean isChecked) {
-
+            public void onCalculateChanged(ICartItem cartItemBean) {
+                calculate();
             }
         });
         recyclerView.setAdapter(mAdapter);
+
+        //给列表注册 ContextMenu 事件
+        registerForContextMenu(recyclerView);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.main_contextmenu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        //获取到的是listView里的条目信息
+        RecyclerViewWithContextMenu.RecyclerViewContextInfo info = (RecyclerViewWithContextMenu.RecyclerViewContextInfo) item.getMenuInfo();
+        Log.d("ContentMenu","onCreateContextMenu position = " + (info != null? info.getPosition() : "-1"));
+        if(info != null && info.getPosition() != -1) {
+            switch (item.getItemId()) {
+                case R.id.action_remove:
+                    mAdapter.removeChild(info.getPosition());
+                    Toast.makeText(this, "成功移入收藏", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.action_findmore:
+                    Toast.makeText(this, "查找与"+ ((GoodsBean) mAdapter.getData().get(info.getPosition())).getGoods_name()+"相似的产品", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.action_delete:
+                    mAdapter.removeChild(info.getPosition());
+                    break;
+                default:
+                    //do nothing
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    /**
+     * 统计操作<br>
+     * 1.先清空全局计数器<br>
+     * 2.遍历所有子元素，只要是被选中状态的，就进行相关的计算操作<br>
+     * 3.给相关的 textView 进行数据填充
+     */
+    private void calculate() {
+        totalCheckedCount = 0;
+        totalCount = 0;
+        totalPrice = 0.00;
+        if (mAdapter.getData() != null) {
+            for (ICartItem iCartItem : mAdapter.getData()) {
+                if (iCartItem.getItemType() == ICartItem.TYPE_CHILD) {
+                    totalCount++;
+                    if (iCartItem.isChecked()) {
+                        totalCheckedCount++;
+                        totalPrice += ((GoodsBean) iCartItem).getGoods_price()*((GoodsBean) iCartItem).getGoods_amount();
+                    }
+                }
+            }
+        }
+
+        mTvTitle.setText(getString(R.string.cart, totalCount));
+        mBtnSubmit.setText(getString(isEditing ? R.string.delete_X : R.string.go_settle_X, totalCheckedCount));
+        mTvTotal.setText(getString(R.string.rmb_X, totalPrice));
     }
 
     private List<CartItemBean> getData() {
@@ -93,11 +163,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             cartItemBeans.add(shopBean);
 
             ArrayList<ChildItemBean> goodsBeans = new ArrayList<>();
-            for (int j = 0; j < 15; j++) {
+            for (int j = 0; j < (i + 5); j++) {
                 GoodsBean goodsBean = new GoodsBean();
                 goodsBean.setGoods_name("忘忧水 " + (j + 1) + " 代");
                 goodsBean.setItemType(CartItemBean.TYPE_CHILD);
                 goodsBean.setItemId((j + 1) * 10 + j);
+                goodsBean.setGoods_price(j + 1);
                 goodsBean.setGroupId(i);
                 goodsBeans.add(goodsBean);
                 cartItemBeans.add(goodsBean);
@@ -113,12 +184,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             //编辑按钮事件
             case R.id.tv_edit:
+                isEditing = !isEditing;
+                mBtnSubmit.setText(getString(isEditing ? R.string.delete_X : R.string.go_settle_X, totalCheckedCount));
                 break;
             //提交订单 & 删除选中（编辑状态）
             case R.id.btn_go_to_pay:
+                submitEvent();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void submitEvent() {
+        if (isEditing) {
+            mAdapter.removeChecked();
+        } else {
+            if (totalCount == 0) {
+                Toast.makeText(this, "你还没有选择任何商品", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this,
+                        new StringBuilder().append("你选择了").append(totalCheckedCount).append("件商品")
+                                .append("共计 ").append(totalPrice).append("元"),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CartLayoutDemo</string>
+    <string name="app_name">购物车</string>
 
     <string name="rmb_X">¥&#160;%1$.2f</string>
     <string name="cart">购物车(%1$d)</string>
