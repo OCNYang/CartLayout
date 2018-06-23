@@ -1,2 +1,3 @@
 # CartLayout
-CartLayout,RecyclerView
+
+![效果图](./img/CartAdapter.png)
