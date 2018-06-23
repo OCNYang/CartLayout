@@ -1,4 +1,4 @@
-package com.ocnyang.cartlayoutdemo;
+package com.ocnyang.cartlayout;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

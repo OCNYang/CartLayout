@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ocnyang.cartlayout.RecyclerViewWithContextMenu;
 import com.ocnyang.cartlayout.bean.CartItemBean;
 import com.ocnyang.cartlayout.bean.ICartItem;
 import com.ocnyang.cartlayout.listener.CartOnCheckChangeListener;
@@ -68,19 +69,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         recyclerView.setAdapter(mAdapter);
 
-        //给列表注册 ContextMenu 事件
+        // 给列表注册 ContextMenu 事件。
+        // 同时如果想让ItemView响应长按弹出菜单，需要在item xml布局中设置 android:longClickable="true"
         registerForContextMenu(recyclerView);
     }
 
+    /**
+     * 添加选项菜单
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.main_contextmenu, menu);
     }
 
+    /**
+     * 选项菜单点击事件
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        //获取到的是listView里的条目信息
+        //获取到的是 listView 里的条目信息
         RecyclerViewWithContextMenu.RecyclerViewContextInfo info = (RecyclerViewWithContextMenu.RecyclerViewContextInfo) item.getMenuInfo();
         Log.d("ContentMenu", "onCreateContextMenu position = " + (info != null ? info.getPosition() : "-1"));
         if (info != null && info.getPosition() != -1) {
@@ -96,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mAdapter.removeChild(info.getPosition());
                     break;
                 default:
-                    //do nothing
                     break;
             }
         }
@@ -139,42 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /**
-     * 数据初始化尤其重要
-     * 1. childItem 数据全部在 GroupItem 数据的下方，数据顺序严格按照对应关系；
-     * 2. GroupItem 下的 ChildItem 数据不能为空；
-     * 3. 初始化时如果不需要，所有类型的条目都可以不设置ID，GroupItem也不用设置setChilds()；
-     *
-     * 列表操作中数据动态的变化设置：
-     * 1. 通过CartAdapter的setData
-     * @return
-     */
-    private List<CartItemBean> getData() {
-        ArrayList<CartItemBean> cartItemBeans = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            ShopBean shopBean = new ShopBean();
-            shopBean.setShop_name("解忧杂货铺 第" + (i + 1) + "分店");
-            shopBean.setItemType(CartItemBean.TYPE_GROUP);
-//            shopBean.setItemId(i);
-            cartItemBeans.add(shopBean);
-
-//            ArrayList<ChildItemBean> goodsBeans = new ArrayList<>();
-            for (int j = 0; j < (i + 5); j++) {
-                GoodsBean goodsBean = new GoodsBean();
-                goodsBean.setGoods_name("忘忧水 " + (j + 1) + " 代");
-                goodsBean.setItemType(CartItemBean.TYPE_CHILD);
-                goodsBean.setItemId((j + 1) * 10 + j);
-                goodsBean.setGoods_price(j + 1);
-                goodsBean.setGroupId(i);
-//                goodsBeans.add(goodsBean);
-                cartItemBeans.add(goodsBean);
-            }
-//            shopBean.setChilds(goodsBeans);
-        }
-        return cartItemBeans;
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -215,4 +191,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
+    /**
+     * 数据初始化尤其重要
+     * 1. childItem 数据全部在 GroupItem 数据的下方，数据顺序严格按照对应关系；
+     * 2. GroupItem 下的 ChildItem 数据不能为空；
+     * 3. 初始化时如果不需要，所有类型的条目都可以不设置ID，GroupItem也不用设置setChilds()；
+     *
+     * 列表操作时数据动态的变化设置：
+     * 1. 通过 CartAdapter 的 addData、setNewData；
+     * 2. 单个添加各个条目可以通过对应的 add 方法；
+     * 3. 单独添加一个 GroupItem ,可以把它的 ChildItem 数据放到 setChilds 中。
+     * @return
+     */
+    private List<CartItemBean> getData() {
+        ArrayList<CartItemBean> cartItemBeans = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            ShopBean shopBean = new ShopBean();
+            shopBean.setShop_name("解忧杂货铺 第" + (i + 1) + "分店");
+            shopBean.setItemType(CartItemBean.TYPE_GROUP);
+//            shopBean.setItemId(i);
+            cartItemBeans.add(shopBean);
+
+//            ArrayList<ChildItemBean> goodsBeans = new ArrayList<>();
+            for (int j = 0; j < (i + 5); j++) {
+                GoodsBean goodsBean = new GoodsBean();
+                goodsBean.setGoods_name("忘忧水 " + (j + 1) + " 代");
+                goodsBean.setItemType(CartItemBean.TYPE_CHILD);
+                goodsBean.setItemId((j + 1) * 10 + j);
+                goodsBean.setGoods_price(j + 1);
+                goodsBean.setGroupId(i);
+//                goodsBeans.add(goodsBean);
+                cartItemBeans.add(goodsBean);
+            }
+//            shopBean.setChilds(goodsBeans);
+        }
+        return cartItemBeans;
+    }
+
 }

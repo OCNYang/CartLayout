@@ -52,7 +52,8 @@
 
     </RelativeLayout>
 
-    <com.ocnyang.cartlayoutdemo.RecyclerViewWithContextMenu
+    <!--如果不使用长按出现选项菜单的功能，这里可以直接使用原生 RecyclerView-->
+    <com.ocnyang.cartlayout.RecyclerViewWithContextMenu
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
