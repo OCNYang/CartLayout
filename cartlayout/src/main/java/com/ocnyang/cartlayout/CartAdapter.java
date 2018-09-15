@@ -138,7 +138,8 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
      */
     public void removeChild(int position) {
         boolean isLastOne = false;
-        if (ICartItem.TYPE_GROUP == mDatas.get(position - 1).getItemType() && ICartItem.TYPE_GROUP == mDatas.get(position + 1).getItemType()) {
+        if ((ICartItem.TYPE_GROUP == mDatas.get(position - 1).getItemType()) &&
+                (ICartItem.TYPE_GROUP == mDatas.get(position + 1).getItemType())) {
             isLastOne = true;
         }
         if (mDatas.get(position).isChecked()) {
@@ -262,7 +263,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
                          boolean isStrict) {
         if (isStrict) {
             if (groupItemBean.getChilds() == null || groupItemBean.getChilds().size() == 0) {
-                Log.e("CartAdapter", "This GroupItem have no one ChildItem");
+                Log.i("CartAdapter", "This GroupItem have no one ChildItem");
             } else {
                 addItem(addPosition, groupItemBean);
                 for (int i = 0; i < groupItemBean.getChilds().size(); i++) {
@@ -307,7 +308,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
 
     public void addChild(IChildItem childItemBean) {
         if (!isHaveGroup() || mDatas.get(mDatas.size() - 1).getItemType() == ICartItem.TYPE_NORMAL) {
-            Log.e("CartAdapter", "addChild is fail,have no group");
+            Log.i("CartAdapter", "addChild is fail,have no group");
             return;
         }
         addChild(mDatas.size(), childItemBean);

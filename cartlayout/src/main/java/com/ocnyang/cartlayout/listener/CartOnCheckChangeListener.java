@@ -1,7 +1,6 @@
 package com.ocnyang.cartlayout.listener;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.ocnyang.cartlayout.CartAdapter;
 import com.ocnyang.cartlayout.ParseHelper;
@@ -87,8 +86,8 @@ public abstract class CartOnCheckChangeListener implements OnCheckChangeListener
             List<ICartItem> childList = ParseHelper.getChildList(beans, position);
 
             if (!isChecked) {
-                if (groupBean.isChecked()) {//group 为选中状态
-                    Log.e("ddd", "取消选中");
+                //group 为选中状态
+                if (groupBean.isChecked()) {
                     int groupPosition = ParseHelper.getGroupPosition(beans,
                             position);
                     setGroupCheck(beans, groupPosition, false);
@@ -96,7 +95,8 @@ public abstract class CartOnCheckChangeListener implements OnCheckChangeListener
                 }
             } else {
                 for (int i = 0; i < childList.size(); i++) {
-                    if (!childList.get(i).isChecked()) {// 只要有一个 child 没有选中，group 就不是选中
+                    // 只要有一个 child 没有选中，group 就不是选中
+                    if (!childList.get(i).isChecked()) {
                         return;
                     }
                 }

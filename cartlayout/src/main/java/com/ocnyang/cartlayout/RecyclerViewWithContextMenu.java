@@ -37,7 +37,6 @@ public class RecyclerViewWithContextMenu extends RecyclerView {
         LayoutManager layoutManager = getLayoutManager();
         if (layoutManager != null) {
             int position = layoutManager.getPosition(originalView);
-            Log.d(TAG, "showContextMenuForChild position = " + position);
             mContextInfo.mPosition = position;
         }
 

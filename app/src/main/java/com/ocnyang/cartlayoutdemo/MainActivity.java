@@ -216,10 +216,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ShopBean shopBean = new ShopBean();
             shopBean.setShop_name("解忧杂货铺 第" + (i + 1) + "分店");
             shopBean.setItemType(CartItemBean.TYPE_GROUP);
-//            shopBean.setItemId(i);
             cartItemBeans.add(shopBean);
 
-//            ArrayList<ChildItemBean> goodsBeans = new ArrayList<>();
             for (int j = 0; j < (i + 5); j++) {
                 GoodsBean goodsBean = new GoodsBean();
                 goodsBean.setGoods_name("忘忧水 " + (j + 1) + " 代");
@@ -227,10 +225,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 goodsBean.setItemId((j + 1) * 10 + j);
                 goodsBean.setGoods_price(j + 1);
                 goodsBean.setGroupId(i);
-//                goodsBeans.add(goodsBean);
                 cartItemBeans.add(goodsBean);
             }
-//            shopBean.setChilds(goodsBeans);
         }
         return cartItemBeans;
     }
