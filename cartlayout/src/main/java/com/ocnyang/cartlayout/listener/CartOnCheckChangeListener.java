@@ -86,15 +86,15 @@ public abstract class CartOnCheckChangeListener implements OnCheckChangeListener
             IGroupItem groupBean = ParseHelper.getGroupBean(beans, position);
             List<ICartItem> childList = ParseHelper.getChildList(beans, position);
 
-            if (!isChecked){
+            if (!isChecked) {
                 if (groupBean.isChecked()) {//group 为选中状态
-                    Log.e("ddd","取消选中");
+                    Log.e("ddd", "取消选中");
                     int groupPosition = ParseHelper.getGroupPosition(beans,
                             position);
                     setGroupCheck(beans, groupPosition, false);
-                    cartAdapter.notifyItemChanged(groupPosition);
+                    cartAdapter.notifyItemChanged(groupPosition, CartAdapter.PAYLOAD_CHECKBOX);
                 }
-            }else {
+            } else {
                 for (int i = 0; i < childList.size(); i++) {
                     if (!childList.get(i).isChecked()) {// 只要有一个 child 没有选中，group 就不是选中
                         return;
@@ -104,7 +104,7 @@ public abstract class CartOnCheckChangeListener implements OnCheckChangeListener
                 int groupPosition = ParseHelper.getGroupPosition(beans, position);
 
                 setGroupCheck(beans, groupPosition, true);
-                cartAdapter.notifyItemChanged(groupPosition);
+                cartAdapter.notifyItemChanged(groupPosition, CartAdapter.PAYLOAD_CHECKBOX);
             }
         }
     }
@@ -123,7 +123,7 @@ public abstract class CartOnCheckChangeListener implements OnCheckChangeListener
             } else if (beans.get(i).getItemType() == ICartItem.TYPE_CHILD) {
                 if (beans.get(i).isChecked() != isChecked) {
                     beans.get(i).setChecked(isChecked);
-                    cartAdapter.notifyItemChanged(i);
+                    cartAdapter.notifyItemChanged(i, CartAdapter.PAYLOAD_CHECKBOX);
                 }
             }
         }
@@ -132,9 +132,9 @@ public abstract class CartOnCheckChangeListener implements OnCheckChangeListener
     /**
      * 设置 group item 选中状态
      *
-     * @param beans     整个数据 list
-     * @param groupPosition    group 的 下标
-     * @param isChecked 设置选中状态
+     * @param beans         整个数据 list
+     * @param groupPosition group 的 下标
+     * @param isChecked     设置选中状态
      */
     private void setGroupCheck(List<ICartItem> beans, int groupPosition, boolean isChecked) {
         beans.get(groupPosition).setChecked(isChecked);

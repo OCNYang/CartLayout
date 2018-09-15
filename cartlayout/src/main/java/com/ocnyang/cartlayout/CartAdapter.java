@@ -27,6 +27,7 @@ import java.util.List;
  *******************************************************************/
 
 public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerView.Adapter<VH> {
+    public static final int PAYLOAD_CHECKBOX = 0x000001;
 
     protected List<ICartItem> mDatas;
     protected Context mContext;
@@ -82,10 +83,24 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         }
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            this.onBindViewHolder(holder, position);
+        } else {
+            if (holder.mCheckBox != null) {
+                if ((PAYLOAD_CHECKBOX == ((int) payloads.get(0))) &&
+                        (holder.mCheckBox.isChecked() != mDatas.get(position).isChecked())) {
+                    holder.mCheckBox.setChecked(mDatas.get(position).isChecked());
+                }
+            }
+        }
+    }
+
     private class OnCheckBoxClickListener implements View.OnClickListener {
         int mPosition, mItemType;
 
-        public OnCheckBoxClickListener(int position, int itemType) {
+        private OnCheckBoxClickListener(int position, int itemType) {
             mPosition = position;
             mItemType = itemType;
         }
@@ -183,7 +198,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
         addData(datas);
     }
 
-    public void addData(List<ICartItem> datas){
+    public void addData(List<ICartItem> datas) {
         mDatas.addAll(datas);
         if (onCheckChangeListener != null) {
             onCheckChangeListener.onCalculateChanged(null);
@@ -361,6 +376,7 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
 
     /**
      * 获取 Adapter 的真实数据
+     *
      * @return
      */
     public List<ICartItem> getData() {
