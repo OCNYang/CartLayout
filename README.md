@@ -15,7 +15,7 @@
 * 支持列表头部添加 tips ;
 * 统计勾选商品的个数、勾选商品价格等。
 
-[![Version Code](https://img.shields.io/badge/Version%20Code-1.0.0-brightgreen.svg)](https://github.com/OCNYang/CartLayout/releases)  
+[![Version Code](https://img.shields.io/badge/Version%20Code-1.0.1-brightgreen.svg)](https://github.com/OCNYang/CartLayout/releases)  
 
 <img src="./README_Res/CartAdapter.png" width = "400" alt="CartAdapter效果图" align=center />
 
