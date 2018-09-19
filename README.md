@@ -38,7 +38,7 @@ Add it in your root build.gradle at the end of repositories:
 ### Step 2. Add the dependency
 
 	dependencies {
-	        implementation 'com.github.OCNYang:CartLayout:v1.0'
+	        implementation 'com.github.OCNYang:CartLayout:v1.0.1'
 	}
 
 > 更详细的使用方法请查看 Demo，Demo中实现方式和各方法的作用在注释中写的很详细。
