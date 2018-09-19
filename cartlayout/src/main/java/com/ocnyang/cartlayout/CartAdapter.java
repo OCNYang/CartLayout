@@ -139,7 +139,8 @@ public abstract class CartAdapter<VH extends CartViewHolder> extends RecyclerVie
     public void removeChild(int position) {
         boolean isLastOne = false;
         if ((ICartItem.TYPE_GROUP == mDatas.get(position - 1).getItemType()) &&
-                (ICartItem.TYPE_GROUP == mDatas.get(position + 1).getItemType())) {
+                (((position + 1) == mDatas.size()) ||
+                        (ICartItem.TYPE_GROUP == mDatas.get(position + 1).getItemType()))) {
             isLastOne = true;
         }
         if (mDatas.get(position).isChecked()) {
