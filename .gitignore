@@ -8,3 +8,4 @@
 app/release/output.json
 /local.properties
 README_Res/release/output.json
+/.idea/
