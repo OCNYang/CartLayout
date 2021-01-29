@@ -7,7 +7,7 @@ package com.ocnyang.cartlayout.bean;
  *    * * * *   * * * *   *     *.Yang  Web site: www.ocnyang.com
  *******************************************************************/
 
-public class ChildItemBean extends CartItemBean implements IChildItem{
+public class ChildItemBean extends CartItemBean implements IChildItem {
     protected int groupId;
 
     @Override

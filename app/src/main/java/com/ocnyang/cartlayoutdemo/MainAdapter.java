@@ -63,25 +63,25 @@ public class MainAdapter extends CartAdapter<CartViewHolder> {
         super.onBindViewHolder(holder, position);
         if (holder instanceof ChildViewHolder) {
             ChildViewHolder childViewHolder = (ChildViewHolder) holder;
-            childViewHolder.textView.setText(((GoodsBean) mDatas.get(position)).getGoods_name());
+            childViewHolder.textView.setText(((GoodsBean) mData.get(position)).getGoods_name());
             childViewHolder.textViewPrice.setText(
-                    mContext.getString(R.string.rmb_X, ((GoodsBean) mDatas.get(position)).getGoods_price()));
-            childViewHolder.textViewNum.setText(String.valueOf(((GoodsBean) mDatas.get(position)).getGoods_amount()));
+                    mContext.getString(R.string.rmb_X, ((GoodsBean) mData.get(position)).getGoods_price()));
+            childViewHolder.textViewNum.setText(String.valueOf(((GoodsBean) mData.get(position)).getGoods_amount()));
         } else if (holder instanceof GroupViewHolder) {
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
-            groupViewHolder.textView.setText(((ShopBean) mDatas.get(position)).getShop_name());
+            groupViewHolder.textView.setText(((ShopBean) mData.get(position)).getShop_name());
         } else if (holder instanceof NormalViewHolder) {
             NormalViewHolder normalViewHolder = (NormalViewHolder) holder;
             normalViewHolder.imgViewClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mDatas.remove(position);
+                    mData.remove(position);
                     notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, mDatas.size());
+                    notifyItemRangeChanged(position, mData.size());
                 }
             });
             normalViewHolder.textView.setText(mContext.getString(R.string.normal_tip_X,
-                    ((NormalBean) mDatas.get(position)).getMarkdownNumber()));
+                    ((NormalBean) mData.get(position)).getMarkdownNumber()));
         }
     }
 }

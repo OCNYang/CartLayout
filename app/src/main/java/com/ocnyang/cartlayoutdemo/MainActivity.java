@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new MainAdapter(this, getData());
+        mAdapter.setCanCollapsing(true);
         mAdapter.setOnCheckChangeListener(new CartOnCheckChangeListener(recyclerView, mAdapter) {
             @Override
             public void onCalculateChanged(ICartItem cartItemBean) {
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 添加选项菜单
+     *
      * @param menu
      * @param v
      * @param menuInfo
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 选项菜单点击事件
+     *
      * @param item
      * @return
      */
@@ -198,11 +201,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1. childItem 数据全部在 GroupItem 数据的下方，数据顺序严格按照对应关系；
      * 2. GroupItem 下的 ChildItem 数据不能为空；
      * 3. 初始化时如果不需要，所有类型的条目都可以不设置ID，GroupItem也不用设置setChilds()；
-     *
+     * <p>
      * 列表操作时数据动态的变化设置：
      * 1. 通过 CartAdapter 的 addData、setNewData；
      * 2. 单个添加各个条目可以通过对应的 add 方法；
      * 3. 单独添加一个 GroupItem ,可以把它的 ChildItem 数据放到 setChilds 中。
+     *
      * @return
      */
     private List<CartItemBean> getData() {

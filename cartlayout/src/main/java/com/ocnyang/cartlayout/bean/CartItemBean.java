@@ -12,6 +12,7 @@ public class CartItemBean implements ICartItem {
     private boolean isChecked = false;
     private int itemType;
     protected long itemId;
+    private boolean isCollapsing = false;
 
     @Override
     public boolean isChecked() {
@@ -42,4 +43,16 @@ public class CartItemBean implements ICartItem {
     public void setItemType(int itemType) {
         this.itemType = itemType;
     }
+
+    @Override
+    public boolean isCollapsing() {
+        return isCollapsing;
+    }
+
+    @Override
+    public void setCollapsing(boolean isCollapsing) {
+        this.isCollapsing = isCollapsing;
+    }
+
+
 }

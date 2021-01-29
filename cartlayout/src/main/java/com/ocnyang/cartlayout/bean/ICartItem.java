@@ -23,4 +23,8 @@ public interface ICartItem {
     int getItemType();
 
     void setItemType(int itemType);
+
+    boolean isCollapsing();
+
+    void setCollapsing(boolean isCollapsing);
 }
