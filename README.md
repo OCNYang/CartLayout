@@ -15,7 +15,7 @@
 - [x] 实现商品 item 长按弹出选项菜单，进行单个商品删除等操作功能；
 - [x] 支持列表头部添加 tips ;
 - [x] 统计勾选商品的个数、勾选商品价格等；
-- [x] 点击店铺标题，折叠起对应的商品条目；
+- [x] **折叠功能** 点击店铺标题，折叠起对应的商品条目；
 - [ ] 添加折叠效果的动画效果
 
 [![Version Code](https://img.shields.io/badge/Version%20Code-1.0.1-brightgreen.svg)](https://github.com/OCNYang/CartLayout/releases)  
