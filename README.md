@@ -20,7 +20,7 @@
 
 [![Version Code](https://img.shields.io/badge/Version%20Code-1.0.3-brightgreen.svg)](https://github.com/OCNYang/CartLayout/releases)  
 
-<img src="./README_Res/CartAdapter.png" width = "400" alt="CartAdapter效果图" align=center />
+<img src="https://cdn.jsdelivr.net/gh/ocnyang/CartLayout@master/README_Res/CartAdapter.png" width = "400" alt="CartAdapter效果图" align=center />
 
 
 ## 导入方法：
