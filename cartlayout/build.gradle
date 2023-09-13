@@ -1,9 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-group='com.github.ocnyang'
-version = '1.0.6'
-
 android {
     compileSdkVersion 31
 
@@ -35,4 +32,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.ocnyang' //your git id
+                artifactId = 'cartlayout' //your-repository
+                version = '1.0.6' // As same as the Tag
+            }
+        }
+    }
 }
