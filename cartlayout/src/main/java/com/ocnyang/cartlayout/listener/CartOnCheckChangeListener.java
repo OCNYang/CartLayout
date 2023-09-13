@@ -1,6 +1,6 @@
 package com.ocnyang.cartlayout.listener;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ocnyang.cartlayout.CartAdapter;
 import com.ocnyang.cartlayout.ParseHelper;

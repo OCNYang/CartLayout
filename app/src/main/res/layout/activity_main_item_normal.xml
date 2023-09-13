@@ -10,7 +10,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="5dp">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/ic_notifications_none"
@@ -29,7 +29,7 @@
         android:textColor="@color/colorAccent"
         android:textSize="13sp"/>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_close"
         android:layout_width="20dp"
         android:layout_height="20dp"
