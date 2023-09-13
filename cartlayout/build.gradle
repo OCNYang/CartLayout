@@ -1,4 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+group='com.github.ocnyang'
+version = '1.0.5'
 
 android {
     compileSdkVersion 28
@@ -7,9 +11,9 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 4
-        versionName "1.0.4"
+        targetSdkVersion 29
+        versionCode 5
+        versionName "1.0.5"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

@@ -18,7 +18,7 @@
 - [x] **折叠功能** 点击店铺标题，折叠起对应的商品条目；
 - [ ] 添加折叠效果的动画效果
 
-[![Version Code](https://img.shields.io/badge/Version%20Code-1.0.3-brightgreen.svg)](https://github.com/OCNYang/CartLayout/releases)  
+[![Version Code](https://img.shields.io/badge/Version%20Code-1.0.5-brightgreen.svg)](https://github.com/OCNYang/CartLayout/releases)  
 
 <img src="https://cdn.jsdelivr.net/gh/ocnyang/CartLayout@master/README_Res/CartAdapter.png" width = "400" alt="CartAdapter效果图" align=center />
 
@@ -41,7 +41,7 @@ Add it in your root build.gradle at the end of repositories:
 ### Step 2. Add the dependency
 
 	dependencies {
-	        implementation 'com.github.OCNYang:CartLayout:v1.0.3'
+	        implementation 'com.github.OCNYang:CartLayout:v1.0.5'
 	}
 
 ## 使用方法：
@@ -102,3 +102,5 @@ registerForContextMenu(recyclerView);
 > 更详细的使用方法请查看 Demo，Demo 中实现方式和各方法的作用在注释中写的很详细。
 
 [APK下载地址](./README_Res/release/app-release.apk)
+
+[直接下载 aar 包使用](./README_Res/cartlayout-1.0.5.aar)
