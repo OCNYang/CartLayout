@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 31
-        versionCode 6
-        versionName "1.0.6"
+        versionCode 7
+        versionName "1.0.7"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -41,7 +41,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.ocnyang' //your git id
                 artifactId = 'cartlayout' //your-repository
-                version = '1.0.6' // As same as the Tag
+                version = '1.0.7' // As same as the Tag
             }
         }
     }
